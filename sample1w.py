@@ -40,6 +40,7 @@ for i in range(0,len(rand_num)):
         list_tmp[20]=list_tmp[20].strip('\"')+list_tmp[21].strip('\"')
         for j in range(21,47):
             list_tmp[j]=list_tmp[j+1]
+        list_tmp = list_tmp[:-1]
     init_tuple=(list_tmp[0].strip(' '),)
     for j in range(len(list_tmp)):
         if j==0:
