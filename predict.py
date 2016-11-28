@@ -8,10 +8,6 @@ import os
 import xgboost as xgb
 import csv
 from IPython import embed
-# def write_pred(file_path,list_pred):
-#     fw=open(file_path,'w')
-#     for i in list_pred:
-#         fw.write(str(i)+'\n')
 
 train_file = '../data/train_ver2.csv'
 train_sample_file = '../data/sample_train.csv'
@@ -40,7 +36,7 @@ def error(list1,list2):
     return result
 
 if __name__=='__main__':
-    fuse_list,id_list,labels_list,len_digit=load_train_data(train_file)
+    fuse_list,id_list,labels_list,len_digit=load_train_data(train_sample_file)
     label_array = np.array(labels_list)
     
     param={
@@ -68,7 +64,7 @@ if __name__=='__main__':
         watchlist=[(xg_train,'train'),(xg_test,'test')]
         num_round=100
         bst=xgb.train(param,xg_train,num_boost_round=num_round,evals=watchlist)
-        bst.save_model(model_path+'/0001.model')
+        bst.save_model(model_path+'/000'+str(n)+'.model')
         pred=bst.predict(xg_test)
         #print pred
         #print y_test
@@ -76,17 +72,10 @@ if __name__=='__main__':
         actual.append(y_test)
         predicted.append(pred)
 
-        '''
-        err=error(pred,y_test)
-        print 'error rate is : '+str(err)
-        err_list.append(err)
-        #compare(pred,y_test,'pare1.csv')
-        '''   
     map_value = mapk(actual,predicted)
     print 'map:',map_value
     fp = open(map_file,'ab+')
     fp.write('map:'+str(map_value)+'\n')
     fp.close()
-    #print 'all err rates are : ',err_list
     
 

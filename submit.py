@@ -3,16 +3,16 @@ import numpy as np
 import csv
 import os 
 import xgboost as xgb
+from read_train_data import load_train_data
 target_path = '../data/submission'
 target_file = '../data/submission/submission.csv'
 train_file = '../data/train_ver2.csv'
 test_file = '../data/test_ver2.csv'
-model_filename = '../model/0001.model'
+model_path = '../model'
 
 def FormatSubmission(id_list,pred):
 	"""
 	transform the test result to the submission form
-
 
 	"""
 	#get title
@@ -34,24 +34,27 @@ def FormatSubmission(id_list,pred):
 	result = np.concatenate([np.array(id_list).reshape(-1,1), np.array(result).reshape(-1,1)],axis = 1)
 	return result
 
-def predict_test(filename = test_file,model = model_filename):
-	bst = xgb.Booster(model_file = model_filename)
-	#dtest = xgb.DMatrix(xxxx)
-	#pred = bst.predict(dtest)
-	#submit(id_list,pred)
+def predict_test(filename = test_file):
+	fuse_list,id_list,len_digit=load_train_data(test_file,0)
+	pred = []
+	dtest=xgb.DMatrix(fuse_list)
+	for n in range(24):
+		bstn = xgb.Booster(model_file = model_path+'/000'+str(n)+'.model')
+		predn=bstn.predict(dtest)
+		pred.append(predn)
+	submit(id_list,pred)
 
 def submit(id_list,pred):
-	result = FormatSubmission(id,pred)
+	result = FormatSubmission(id_list,pred)
 	if not os.path.exists(target_path):
 		os.makedirs(target_path)
 	with open(target_file,'wb') as csvfile:
 		spamwriter = csv.writer(csvfile, delimiter = ',')
+		spamwriter.writerow(['ncodpers','added_products'])
 		spamwriter.writerows(result)
 
 
 if __name__ == '__main__':
-	id = [1,2,3,4]
-	pred = [[0,1,0,1],[0,0,1,1]]
-	submit(id,pred)
+	predict_test()
 	if os.path.exists(target_file):
 		print 'save done!'

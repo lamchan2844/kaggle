@@ -10,3 +10,7 @@ sample_train.csv
 read_train_data.py
 读取训练数据，并进行onehotencoding
 
+运行步骤：
+1.先运行predict.py 生成model
+2.运行submit.py 预测test的数据并生成提交文件，存在data/submission文件夹中
+

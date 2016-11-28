@@ -10,6 +10,7 @@ test_file = '../data/test_ver2.csv'
 
 number_col = [5,8,22] #values in these cols are number  
 discard_col = [0,1,6,10,20] #discard these cols
+
 def isnumber(n):
 	if n in number_col:
 		return True
@@ -29,13 +30,16 @@ def string2int_list(mlist):
 			mlist[i] = 0
 	return mlist
 
-def load_train_data(file = train_sample_file):
+def load_train_data(file = train_sample_file,flag = 1):
+	'''
+	flag = 1 -- train data
+	flag = 0 -- test data
+	'''
 	digit_list=[]
 	alpha_list=[]
 	id_list=[]
 	labels_list=[]
 	with open(file,'rb') as csvfile:
-		#start = clock()
 		spamreader = csv.reader(csvfile,delimiter=',')
 		for i,row in enumerate(spamreader):
 			if i == 0:
@@ -46,9 +50,6 @@ def load_train_data(file = train_sample_file):
 			row = '|'.join(row)
 			line_list = row.strip().split('|')
 			id_list.append(int(line_list[1]))
-			#print line_list[20]
-			#line_list=line_list[2:6]+line_list[7:10]+line_list[11:20]+line_list[21:24]
-			#print line_list
 			
 			## transform some features to num  or discard the row
 			if line_list[19].strip() == 'NA':# province code transform NA to -1
@@ -59,7 +60,8 @@ def load_train_data(file = train_sample_file):
 				continue
 			if line_list[8].strip() == 'NA': #age if no age ,discard this row
 				line_list[8] = '-1'
-			labels_list.append(string2int_list(line_list[24:]))
+			if flag == 1:
+				labels_list.append(string2int_list(line_list[24:]))
 			line_digit=[float(digit.strip()) for n,digit in enumerate(line_list) if (isnumber(n)==True) and discard(n) == False ] #digit
 			line_alpha=[st for n,st in enumerate(line_list) if isnumber(n)==False and discard(n) == False] # string
 			len_gap=len(line_digit) #length of digit line
@@ -79,23 +81,6 @@ def load_train_data(file = train_sample_file):
 
 	num_code = np.concatenate([digit_list, alpha_arr_pro.T],axis = 1)
 
-	feature_name = []
-	#print firstline
-	#change the position of features' name to fit the data
-	for col in number_col:
-		feature_name.append(firstline[col])
-	for col in range(48):
-		if col not in number_col and col not in discard_col:
-			#print col
-			feature_name.append(firstline[col])
-	'''
-	target_file ='../data/train_processed.csv'
-	with open(target_file,'wb') as csvfile:
-		spamwriter = csv.writer(csvfile, delimiter = ',')
-		spamwriter.writerow(feature_name)
-		spamwriter.writerows(num_code)	
-	'''
-
 	enc = preprocessing.OneHotEncoder()
 	enc.fit(alpha_arr_pro.T)
 	trans_list = enc.transform(alpha_arr_pro.T).toarray()
@@ -103,11 +88,10 @@ def load_train_data(file = train_sample_file):
 	trans_list=np.array(trans_list,dtype=int)
 	digit_list=np.array(digit_list,dtype=int)
 	fuse_list=np.concatenate([digit_list,trans_list],axis=1)
-	fuse_list = np.concatenate([trans_list,trans_list],axis=1)
-	#print fuse_list
+
 	print 'No. of sample: ',len(trans_list)
 	print 'length of encoding: ',len(trans_list[0])
-	return fuse_list,id_list,labels_list,len_gap
-
-	#finish = clock()
-	#print 'time: ',(finish - start),' s'
+	if flag == 1:
+		return fuse_list,id_list,labels_list,len_gap
+	if flag == 0:
+		return fuse_list,id_list,len_gap
