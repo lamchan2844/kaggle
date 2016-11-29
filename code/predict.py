@@ -2,12 +2,11 @@ import numpy as np
 import scipy as sp
 import math
 from sklearn.cross_validation import train_test_split
-from read_train_data import load_train_data
+from utils import load_data
 from evalute import mapk
 import os
 import xgboost as xgb
 import csv
-from IPython import embed
 
 train_file = '../data/train_ver2.csv'
 train_sample_file = '../data/sample_train.csv'
@@ -36,7 +35,7 @@ def error(list1,list2):
     return result
 
 if __name__=='__main__':
-    fuse_list,id_list,labels_list,len_digit=load_train_data(train_sample_file)
+    fuse_list,id_list,labels_list=load_data(flag = 1)
     label_array = np.array(labels_list)
     
     param={

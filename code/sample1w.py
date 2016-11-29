@@ -20,7 +20,7 @@ for i in range(10000000,20000000):
 '''
 #select 100000 numbers from 1 to 13600000
 num_sample = 100000
-rand_num = random.sample(range(1,13600000),num_sample)
+rand_num = random.sample(range(1,13647309),num_sample)
 rand_num.sort()
 #print rand_num
 for i in rand_num:

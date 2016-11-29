@@ -3,7 +3,7 @@ import numpy as np
 import csv
 import os 
 import xgboost as xgb
-from read_train_data import load_train_data
+from utils import load_data
 target_path = '../data/submission'
 target_file = '../data/submission/submission.csv'
 train_file = '../data/train_ver2.csv'
@@ -34,8 +34,8 @@ def FormatSubmission(id_list,pred):
 	result = np.concatenate([np.array(id_list).reshape(-1,1), np.array(result).reshape(-1,1)],axis = 1)
 	return result
 
-def predict_test(filename = test_file):
-	fuse_list,id_list,len_digit=load_train_data(test_file,0)
+def predict_test():
+	fuse_list,id_list=load_data(flag = 0)
 	pred = []
 	dtest=xgb.DMatrix(fuse_list)
 	for n in range(24):
