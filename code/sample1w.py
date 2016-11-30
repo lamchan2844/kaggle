@@ -20,12 +20,21 @@ for i in range(10000000,20000000):
 '''
 #select 100000 numbers from 1 to 13600000
 num_sample = 100000
-rand_num = random.sample(range(1,13647309),num_sample)
+beg = 1
+end = 13647309
+rand_num = random.sample(range(beg,end),num_sample)
 rand_num.sort()
 #print rand_num
-for i in rand_num:
+count = 0;
+for i in range(1,13647309):
 	line=fp.readline()
-	lines.append(line)
+	if i == rand_num[count]:
+		lines.append(line)
+		count += 1
+		if count%(num_sample/100)) ==0:
+			print '%d%% completed'%((count+0.0)/num_sample*100.0)
+		if count == num_sample:
+			break
 
 target_file='../data/sample_train.csv'
 csvfile=file(target_file,'wb')

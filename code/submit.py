@@ -26,9 +26,18 @@ def FormatSubmission(id_list,pred):
 	pred = pred.T
 	for row in pred:
 		rst = ''
+		count = 0
+		row_new = row.tolist()
+		while(count!=7):
+			ind = row_new.index(max(row_new))
+			rst += ' '+result_tilte[ind].strip('"')
+			row_new[ind] = -1
+			count += 1
+		'''
 		for i,p in enumerate(row):
 			if p > 0.5:
 				rst += ' '+result_tilte[i].strip('"')
+		'''
 		rst = rst.strip(' ')
 		result.append(rst)
 	result = np.concatenate([np.array(id_list).reshape(-1,1), np.array(result).reshape(-1,1)],axis = 1)
@@ -36,12 +45,15 @@ def FormatSubmission(id_list,pred):
 
 def predict_test():
 	fuse_list,id_list=load_data(flag = 0)
+	print 'load completed'
 	pred = []
 	dtest=xgb.DMatrix(fuse_list)
 	for n in range(24):
 		bstn = xgb.Booster(model_file = model_path+'/000'+str(n)+'.model')
 		predn=bstn.predict(dtest)
 		pred.append(predn)
+		print 'Predicted' ,str(n+1),'feature'
+	print 'Submitting...'
 	submit(id_list,pred)
 
 def submit(id_list,pred):
@@ -58,3 +70,4 @@ if __name__ == '__main__':
 	predict_test()
 	if os.path.exists(target_file):
 		print 'save done!'
+	print 'Completed'
