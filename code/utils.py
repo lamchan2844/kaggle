@@ -46,7 +46,7 @@ def data_preprocessing(file = train_sample_file, flag = 1):
 			if i == 0:
 				firstline = row
 				continue
-			if i == 100001:
+			if flag == 1 and i == 100001:
 				break
 			row = '|'.join(row)
 			line_list = row.strip().split('|')
