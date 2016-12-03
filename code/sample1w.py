@@ -35,7 +35,7 @@ for i in range(1,13647309):
 			print '%d%% completed'%((count+0.0)/num_sample*100.0)
 		if count == num_sample:
 			break
-
+random.shuffle(lines)
 target_file='../data/sample_train.csv'
 csvfile=file(target_file,'wb')
 writer=csv.writer(csvfile)
