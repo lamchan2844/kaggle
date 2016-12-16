@@ -6,7 +6,7 @@ import random
 source_path='../data/train_ver2.csv'
 fp=open(source_path,'r')
 line_title=fp.readline().strip().split(',')
-
+line_title=[subline.strip('\"') for subline in line_title]
 
 lines=[]
 '''
