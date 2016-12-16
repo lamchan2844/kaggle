@@ -31,7 +31,7 @@ for i in range(1,13647309):
 	if i == rand_num[count]:
 		lines.append(line)
 		count += 1
-		if count%(num_sample/100)) ==0:
+		if count%(num_sample/100) ==0:
 			print '%d%% completed'%((count+0.0)/num_sample*100.0)
 		if count == num_sample:
 			break

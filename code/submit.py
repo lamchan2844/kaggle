@@ -4,6 +4,7 @@ import csv
 import os 
 import xgboost as xgb
 from utils import load_data
+import pandas as pd
 target_path = '../data/submission'
 target_file = '../data/submission/submission.csv'
 train_file = '../data/train_ver2.csv'
@@ -44,12 +45,14 @@ def FormatSubmission(id_list,pred):
 	return result
 
 def predict_test():
-	fuse_list,id_list=load_data(flag = 0)
+	#fuse_list,id_list=load_data(flag = 0)
+	fuse_list = pd.read_csv('../data/test_predictors.csv')
+	id_list = pd.read_csv('../data/test_IDs.csv')
 	print 'load completed'
 	pred = []
 	dtest=xgb.DMatrix(fuse_list)
 	for n in range(24):
-		bstn = xgb.Booster(model_file = model_path+'/000'+str(n)+'.model')
+		bstn = xgb.Booster(model_file = model_path+'/001'+str(n)+'.model')
 		predn=bstn.predict(dtest)
 		pred.append(predn)
 		print 'Predicted' ,str(n+1),'feature'
