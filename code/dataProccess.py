@@ -101,6 +101,5 @@ predictors = [x for x in train.columns if x not in targets and x not in IDcol]
 train[predictors].to_csv('../data/train_predictors.csv',index = False)
 train[targets].to_csv('../data/train_targets.csv',index = False)
 test[predictors].to_csv('../data/test_predictors.csv',index = False)
-test[IDcol].to_csv('../data/test_IDs.csv',index = False)
-
+test[IDcol].to_csv('../data/test_IDs.csv',index = False)# 这个文件输出有问题，没有输出标题，所以会出错，我是手动加上去的，还没解决
 print 'save done!'
