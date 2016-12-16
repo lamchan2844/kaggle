@@ -28,7 +28,7 @@ if __name__=='__main__':
 
     global rf_cls
     for i in range(len_label):
-        rf_cls[i]=RandomForestClassifier(n_estimators=50,max_depth=max_depth,random_state=random_state)
+        rf_cls[i]=RandomForestClassifier(n_estimators=50,n_jobs=4,max_depth=max_depth,random_state=random_state)
     pred=np.zeros(label_array.shape)
     for i in range(len_label):
         x_train,x_test,y_train,y_test=train_test_split(fuse_list,label_array[:,i],test_size=0.4)
