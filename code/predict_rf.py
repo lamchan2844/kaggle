@@ -42,5 +42,5 @@ if __name__=='__main__':
     print map_value
     with open(map_file,'a') as fw:
         str_tmp='with max_depth= '+str(max_depth)+' and random_state= '+str(random_state)+': '
-        str_tmp+='map@7 is : '+map_value+'\n'
+        str_tmp+='map@7 is : '+str(map_value)+'\n'
         fw.write(str_tmp)
