@@ -32,6 +32,7 @@ def FormatSubmission(id_list,pred):
 		while(count!=7):
 			ind = row_new.index(max(row_new))
 			rst += ' '+result_tilte[ind].strip('"')
+			#rst += ' '+str(row_new[ind])			
 			row_new[ind] = -1
 			count += 1
 		'''
