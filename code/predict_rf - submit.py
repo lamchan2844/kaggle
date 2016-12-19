@@ -46,11 +46,12 @@ if __name__=='__main__':
     pred = np.zeros([400000,len_label])
     actual = []
     predicted = []
+    x_train,x_test,ys_train,ys_test=train_test_split(fuse_list,labels_list,test_size=0.4)
     for i in range(len_label):
+        y_train,y_test=ys_train[:,i],ys_test[:,i]
         print i
         rf_cls=RandomForestClassifier(n_estimators=50,n_jobs=4,max_depth=max_depth,random_state=random_state)
     #pred=np.zeros(labels_list.shape)        
-        x_train,x_test,y_train,y_test=train_test_split(fuse_list,labels_list[targets[i]],test_size=0.4)
         rf_cls.fit(x_train,y_train)
         #print x_test.shape
         #print pred.shape
