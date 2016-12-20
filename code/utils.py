@@ -46,8 +46,8 @@ def data_preprocessing(file = train_sample_file, flag = 1):
 			if i == 0:
 				firstline = row
 				continue
-			if flag == 1 and i == 100001:
-				break
+			#if flag == 1 and i == 100001:
+			#	break
 			row = '|'.join(row)
 			line_list = row.strip().split('|')
 			id_list.append(int(line_list[1]))
@@ -125,5 +125,16 @@ def load_data(file = train_sample_file, flag = 1):
 	if flag == 0:
 		return fuse_list,id_list_test
 
+def get_train_title():
+	## get the title
+	fp=open('../data/train_ver2.csv','r')
+	first_line = fp.readline()
+	line_title=first_line.strip().split(',')
+	title = []
+	for var in line_title:
+		title.append(var.strip('\"'))
+	fp.close()
+	return title
+
 if __name__ == '__main__':
-	load_data(flag = 1)
+	get_train_title()

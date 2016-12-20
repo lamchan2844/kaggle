@@ -3,7 +3,7 @@ import numpy as np
 import csv
 import os 
 import xgboost as xgb
-from utils import load_data
+#from utils import load_data
 import pandas as pd
 target_path = '../data/submission'
 target_file = '../data/submission/submission.csv'
@@ -32,7 +32,6 @@ def FormatSubmission(id_list,pred):
 		while(count!=7):
 			ind = row_new.index(max(row_new))
 			rst += ' '+result_tilte[ind].strip('"')
-			#rst += ' '+str(row_new[ind])			
 			row_new[ind] = -1
 			count += 1
 		'''
@@ -57,21 +56,35 @@ def predict_test():
 		predn=bstn.predict(dtest)
 		pred.append(predn)
 		print 'Predicted' ,str(n+1),'feature'
-	print 'Submitting...'
-	submit(id_list,pred)
+	return id_list,pred
+	
 
-def submit(id_list,pred):
+def WriteSubmission(id_list,pred,filename):
 	result = FormatSubmission(id_list,pred)
 	if not os.path.exists(target_path):
 		os.makedirs(target_path)
-	with open(target_file,'wb') as csvfile:
+	with open(target_path+'/'+filename+'.csv','wb') as csvfile:
 		spamwriter = csv.writer(csvfile, delimiter = ',')
 		spamwriter.writerow(['ncodpers','added_products'])
 		spamwriter.writerows(result)
 
 
-if __name__ == '__main__':
-	predict_test()
+def submit(filename = 'submission'):
+	'''
+	predict the test data & write the submission file
+	'''
+	id_list,pred = predict_test()
+	print 'predicted done!\nwriting the prob of each label to ../data/submission/submission_prob.csv'
+	if not os.path.exists(target_path):
+		os.makedirs(target_path)
+	with open('../data/submission/submission_prob.csv','wb') as csvfile:
+		spamwriter = csv.writer(csvfile, delimiter = ',')
+		spamwriter.writerows(np.array(pred).T)
+	print 'submission_prob file writing done!\n Writing Submission file...'
+	WriteSubmission(id_list,pred,filename = filename)
 	if os.path.exists(target_file):
-		print 'save done!'
+		print 'Submission file save done!'
 	print 'Completed'
+
+if __name__ == '__main__':
+	submit()

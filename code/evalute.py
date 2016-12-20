@@ -16,6 +16,8 @@ def FormatResult(act, pred):
 	return actual,predicted
 
 def apk(actual, predicted, k = 7):
+	#print actual
+	#print predicted
 	if len(predicted) >k:
 		predicted = predicted[:k]
 
@@ -28,20 +30,20 @@ def apk(actual, predicted, k = 7):
 			score += num_hits / (i + 1.0)
 
 	if not actual:
-		if not predicted: #change,not sure
-			return 1.0
-		else:
-			return 0.0
+		return 0.0
 
+	#print 'label\'s ap:',score / min(len(actual), k)
 	return score / min(len(actual), k)
 
 def mapk(act, pred, k = 7):
 	#transform the pred and actual to the ap form
 	actual, predicted = FormatResult(act,pred) 
+	#actual = act
+	#predicted = pred
 	return np.mean([apk(a,p,k) for a,p in zip(actual, predicted)])
 
 if __name__ == '__main__':
-	act = [[1,0,1],[0,1,1],[1,1,1]]
-	pred = [[1,0,1],[0,1,1],[1,1,1]]
+	act = [[1,2,3,5],[2,4,7],[5,3]]
+	pred = [[1,2,4,6],[3,5,5],[6,3,2,5]]
 	#print FormatResult(act,pred)
 	print mapk(act,pred)

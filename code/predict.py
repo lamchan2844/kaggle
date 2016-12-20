@@ -3,12 +3,12 @@ import scipy as sp
 import pandas as pd
 import math
 from sklearn.cross_validation import train_test_split
-from utils import load_data
+#from utils import load_data
 from evalute import mapk
 import os
 import xgboost as xgb
 import csv
-from submit import predict_test
+#from submit import predict_test
 
 train_file = '../data/train_ver2.csv'
 train_sample_file = '../data/sample_train.csv'
@@ -61,12 +61,14 @@ def showConfusionMatrix(acut,pred):
 
 
 def showConfusionMatrix_ALL(acut,pred):
-	print len(acut)
-	for i in range(len(acut)):
-		print 'label ',i
-		showConfusionMatrix(acut[i].values,pred[i])
-		#showConfusionMatrix(acut[i],pred[i])
-		print '\n'
+    print len(acut)
+    for i in range(len(acut)):
+        print 'label ',i
+        #print acut[i].values
+        #print pred[i]
+        showConfusionMatrix(acut[i].values,pred[i])
+        #showConfusionMatrix(acut[i],pred[i])
+        print '\n'
 
 
 ## get the title
@@ -79,12 +81,12 @@ for var in line_title:
 fp.close()
 targets = title[24:]
 
-if __name__=='__main__':
+def predict():
     fuse_list = pd.read_csv('../data/train_predictors.csv')
     labels_list = pd.read_csv('../data/train_targets.csv')
     #fuse_list,id_list,labels_list=load_data(flag = 1)
     #label_array = np.array(labels_list)
-    
+
     param={
         'eta':0.3,
         'max_depth':4,
@@ -103,7 +105,7 @@ if __name__=='__main__':
     actual = []
     predicted = []
     for n in range(labels_list.shape[1]):
-    	#x_train,x_test,y_train,y_test=train_test_split(fuse_list,label_array.T[n],test_size=0.2)
+        #x_train,x_test,y_train,y_test=train_test_split(fuse_list,label_array.T[n],test_size=0.2)
         x_train,x_test,y_train,y_test=train_test_split(fuse_list,labels_list[targets[n]],test_size=0.2)
         xg_train=xgb.DMatrix(x_train,label=y_train)
         xg_test=xgb.DMatrix(x_test,label=y_test)
@@ -115,7 +117,7 @@ if __name__=='__main__':
         pred=bst.predict(xg_test)
         #print pred
         #print y_test
-        print 'predict done! '
+        print 'label %d predict done! '%n
         actual.append(y_test)
         predicted.append(pred)
         #showConfusionMatrix(y_test,pred)
@@ -123,16 +125,19 @@ if __name__=='__main__':
     
     showConfusionMatrix_ALL(actual,predicted)
     with open('../data/actual_20w.csv','wb') as csvfile:
-    	spamwriter = csv.writer(csvfile, delimiter = ',')
-    	spamwriter.writerows(np.array(actual).T)
-	with open('../data/predicted_20w.csv','wb') as csvfile:
-		spamwriter = csv.writer(csvfile, delimiter = ',')
-		spamwriter.writerows(np.array(predicted).T)
+        spamwriter = csv.writer(csvfile, delimiter = ',')
+        spamwriter.writerows(np.array(actual).T)
+    with open('../data/predicted_20w.csv','wb') as csvfile:
+        spamwriter = csv.writer(csvfile, delimiter = ',')
+        spamwriter.writerows(np.array(predicted).T)
 
     map_value = mapk(actual,predicted)
-    print 'map:',map_value
+    print 'xgb_map:',map_value
+    if not os.path.exists('../result_tmp'):
+		os.makedirs('../result_tmp')
     fp = open(map_file,'ab+')
     fp.write('map:'+str(map_value)+'\n')
     fp.close()
-    
 
+if __name__=='__main__':
+    predict()
